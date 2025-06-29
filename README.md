@@ -23,6 +23,31 @@ This is a lightweight NixOS configuration that utilizes flakes and home-manager,
 └── README.md                # This file
 ```
 
+# Lightweight NixOS Configuration with Flakes (No Home-Manager)
+
+This is a lightweight NixOS configuration that utilizes flakes without home-manager, inspired by the [librephoenix/nixos-config](https://github.com/librephoenix/nixos-config) repository but significantly simplified.
+
+## Features
+
+- **Flake-based configuration**: Modern, reproducible builds with dependency management
+- **No Home-Manager**: All configuration is system-level for simplicity
+- **Lightweight setup**: Minimal configuration focusing on essential packages and settings
+- **SSH enabled**: Ready for remote access
+- **GNOME desktop environment**: Clean, user-friendly desktop setup
+- **Development-ready**: Includes common development tools and terminal configurations
+
+## Files Structure
+
+```
+.
+├── flake.nix                 # Main flake configuration with inputs/outputs
+├── configuration.nix         # Complete NixOS configuration (system and user)
+├── hardware-configuration.nix # Hardware-specific configuration (auto-generated)
+├── setup-user-dotfiles.sh   # Script to set up user dotfiles
+├── install.sh               # Installation script
+└── README.md                # This file
+```
+
 ## Quick Start
 
 ### Prerequisites
@@ -47,7 +72,7 @@ This is a lightweight NixOS configuration that utilizes flakes and home-manager,
    - Generate your hardware configuration automatically
    - Prompt you to customize settings in `flake.nix`
    - Build and switch to the new NixOS configuration
-   - Install and activate the Home-Manager configuration
+   - Set up user dotfiles for zsh, git, and alacritty
 
 ### Manual Installation
 
@@ -68,9 +93,9 @@ If you prefer to install manually:
    sudo nixos-rebuild switch --flake .#system
    ```
 
-4. **Install Home-Manager configuration:**
+4. **Set up user dotfiles:**
    ```bash
-   nix run home-manager/master -- switch --flake .#user
+   ./setup-user-dotfiles.sh
    ```
 
 ## Customization
@@ -138,26 +163,26 @@ The default configuration uses GNOME. To change this:
 
 After initial installation, to apply changes:
 
-1. **Edit configuration files** as needed
+1. **Edit configuration files** as needed (mainly `configuration.nix`)
 2. **Rebuild system configuration:**
    ```bash
    sudo nixos-rebuild switch --flake .#system
    ```
-3. **Update Home-Manager configuration:**
+3. **Update user dotfiles if needed:**
    ```bash
-   home-manager switch --flake .#user
+   ./setup-user-dotfiles.sh
    ```
 
 ## Key Differences from librephoenix/nixos-config
 
 This configuration is intentionally simplified:
 
-- **Single profile**: No multiple profile system
+- **No Home-Manager**: All configuration is system-level for simplicity
+- **Single configuration file**: Everything in `configuration.nix`
 - **Essential packages only**: Focused on core development tools
-- **Simplified structure**: Fewer modules and abstractions
 - **GNOME default**: Single desktop environment choice
 - **Basic theming**: No complex styling system
-- **Minimal modules**: Direct configuration instead of heavily modularized setup
+- **SSH enabled**: Ready for remote access out of the box
 
 ## Extending the Configuration
 

@@ -44,26 +44,7 @@
       # configure lib
       lib = inputs.nixpkgs.lib;
 
-      # configure home-manager
-      home-manager = inputs.home-manager;
-
     in {
-      homeConfigurations = {
-        user = home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
-          modules = [
-            ./home.nix
-          ];
-          extraSpecialArgs = {
-            # pass config variables from above
-            inherit pkgs-stable;
-            inherit systemSettings;
-            inherit userSettings;
-            inherit inputs;
-          };
-        };
-      };
-
       nixosConfigurations = {
         system = lib.nixosSystem {
           system = systemSettings.system;
@@ -84,8 +65,5 @@
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "nixpkgs/nixos-25.05";
-
-    home-manager.url = "github:nix-community/home-manager/master";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 }

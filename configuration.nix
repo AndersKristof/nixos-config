@@ -77,7 +77,105 @@
     packages = with pkgs; [
       firefox
     ];
+    shell = pkgs.zsh; # Set zsh as default shell
   };
+
+  # Configure default shell globally
+  users.defaultUserShell = pkgs.zsh;
+  
+  # Enable zsh completion for system
+  programs.zsh = {
+    enable = true;
+    enableCompletion = true;
+    autosuggestions.enable = true;
+    syntaxHighlighting.enable = true;
+    
+    # System-wide shell aliases
+    shellAliases = {
+      ll = "ls -l";
+      la = "ls -la";
+      ".." = "cd ..";
+      "..." = "cd ../..";
+      grep = "rg";
+      cat = "bat";
+      ls = "exa";
+    };
+    
+    ohMyZsh = {
+      enable = true;
+      plugins = [ "git" "sudo" "docker" "kubectl" ];
+      theme = "robbyrussell";
+    };
+  };
+
+  # Configure Git globally
+  programs.git = {
+    enable = true;
+    config = {
+      init.defaultBranch = "main";
+      pull.rebase = true;
+    };
+  };
+
+  # Configure Vim globally
+  programs.vim = {
+    defaultEditor = true;
+    extraConfig = ''
+      set number
+      set relativenumber
+      set tabstop=2
+      set shiftwidth=2
+      set expandtab
+      set nocompatible
+      syntax on
+      set background=dark
+      colorscheme default
+      
+      " Better search
+      set incsearch
+      set hlsearch
+      set ignorecase
+      set smartcase
+      
+      " Better editing
+      set autoindent
+      set smartindent
+      set backspace=indent,eol,start
+      
+      " Show matching brackets
+      set showmatch
+      
+      " Enable mouse support
+      set mouse=a
+    '';
+  };
+
+  # Set environment variables
+  environment.variables = {
+    EDITOR = userSettings.editor;
+    BROWSER = "firefox";
+  };
+
+  # Enable SSH service
+  services.openssh = {
+    enable = true;
+    settings = {
+      PasswordAuthentication = true; # Allow password login
+      PermitRootLogin = "no"; # Disable root login for security
+      Port = 22; # Default SSH port
+    };
+  };
+
+  # Open SSH port in firewall
+  networking.firewall.allowedTCPPorts = [ 22 ];
+
+  # Configure fonts
+  fonts.packages = with pkgs; [
+    source-code-pro
+    noto-fonts
+    noto-fonts-cjk
+    noto-fonts-emoji
+  ];
 
   # Enable automatic login for the user.
   # services.xserver.displayManager.autoLogin.enable = true;
@@ -88,11 +186,56 @@
 
   # List packages installed in system profile
   environment.systemPackages = with pkgs; [
-    vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    # Core utilities from home.nix
+    htop
+    tree
+    unzip
+    which
+    file
+    ripgrep
+    fd
+    bat
+    exa
+    
+    # Development tools
+    git
+    vim
+    neovim
+    vscode
+    
+    # Terminal emulator
+    alacritty
+    
+    # Web browser
+    firefox
+    
+    # System monitoring
+    btop
+    
+    # File manager
+    ranger
+    
+    # Networking tools
     wget
     curl
-    git
-    home-manager
+    
+    # Text processing
+    jq
+    
+    # Archive tools
+    p7zip
+    
+    # Media
+    feh # image viewer
+    
+    # System tools
+    killall
+    pciutils
+    usbutils
+    
+    # Shell and completion
+    zsh
+    oh-my-zsh
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
